@@ -172,22 +172,4 @@ This tool can be useful for:
 - Giving files consistent names
 - Batch-renaming assets for projects
 
-## Repository Name Suggestion
 
-Recommended GitHub repository name:
-
-```text
-batch-file-renamer
-```
-
-## Description for GitHub
-
-```text
-A simple C command-line tool for batch renaming files in a selected folder using custom naming conventions and indexed filenames.
-```
-
-## License
-
-This project is open source and can be used for learning, modification, and personal projects.
-
-You can add a specific license such as MIT if needed.
