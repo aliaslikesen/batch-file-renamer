@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c17 -Wall -Wextra
 TARGET = batch-file-renamer
-SRC = src/main.c
+SRC = batch-file-renamer.c
 
 all:
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
