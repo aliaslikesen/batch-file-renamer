@@ -342,7 +342,20 @@ static void free_items(FileItem *items, size_t count) {
     free(items);
 }
 
-int main(void) {
+static int ask_continue(void) {
+    char answer[32];
+
+    read_line("\nCzy chcesz dalej zamieniac nazwy plikow? (t/n): ", answer, sizeof(answer));
+
+    if (answer[0] == 't' || answer[0] == 'T' ||
+        answer[0] == 'y' || answer[0] == 'Y') {
+        return 1;
+    }
+
+    return 0;
+}
+
+static int run_rename_once(void) {
     char folder[INPUT_SIZE];
     char base_name[INPUT_SIZE];
     char option_text[32];
@@ -381,11 +394,13 @@ int main(void) {
 
     if (!collect_files(folder, &items, &count)) {
         fprintf(stderr, "Nie udalo sie odczytac folderu: %s\n", folder);
+        free_items(items, count);
         return 1;
     }
 
     if (count == 0) {
         printf("W podanym folderze nie znaleziono plikow.\n");
+        free_items(items, count);
         return 0;
     }
 
@@ -476,6 +491,7 @@ int main(void) {
             fprintf(stderr, "Brak pamieci.\n");
             free(temp_path);
             free(final_path);
+            rollback_temp_names(folder, items, count);
             free_items(items, count);
             return 1;
         }
@@ -486,6 +502,7 @@ int main(void) {
 
             free(temp_path);
             free(final_path);
+            rollback_temp_names(folder, items, count);
             free_items(items, count);
             return 1;
         }
@@ -499,5 +516,17 @@ int main(void) {
     printf("\nGotowe. Zmieniono nazwy %zu plikow.\n", count);
 
     free_items(items, count);
+    return 0;
+}
+
+int main(void) {
+    int keep_running = 1;
+
+    while (keep_running) {
+        run_rename_once();
+        keep_running = ask_continue();
+    }
+
+    printf("\nProgram zakonczony.\n");
     return 0;
 }
